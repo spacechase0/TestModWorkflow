@@ -36,4 +36,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: TestMod ${{ env.TestMod_version }}
-        path: $GITHUB_WORKSPACE/TestMod/bin/Release/TestMod.zip
+        path: TestMod/bin/Release/TestMod.zip
