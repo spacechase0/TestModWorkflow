@@ -1,0 +1,30 @@
+name: Build Mods
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+    - name: Setup game and SMAPI
+      uses: actions/checkout@v4
+      with:
+        name: StardewModders/mod-reference-assemblies
+        ref: refs/tags/SDV1.6.3-SMAPI4.0.2
+        path: GamePath
+    - name: Set game path
+      run: |
+        echo "GamePath={{ GITHUB_WORKSPACE }}/GamePath" >> "$GITHUB_ENV"
+        echo "<Project><PropertyGroup><GamePath>{{ GITHUB_WORKSPACE }}/GamePath</GamePath></PropertyGroup></Project>" > "$HOME/stardewvalley.targets"
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
