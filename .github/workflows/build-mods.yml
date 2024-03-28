@@ -63,11 +63,11 @@ jobs:
       run: |
         unzip TestMod.zip -d mod
         echo "ModVersion=$(jq '.Version')" >> $GITHUB_ENV
-        echo "ModId=$(jq '.UpdateKeys.\[\] | select(startswith(\"Nexus:\"))' < mod/TestMod/manifest.json | grep -o '\[0-9\]*')" >> $GITHUB_ENV
+        echo "ModId=$(jq '.UpdateKeys.[] | select(startswith(\\"Nexus:\\"))' < mod/TestMod/manifest.json | grep -o '[0-9]*')" >> $GITHUB_ENV
     - name: Upload mod
       env:
         NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
         NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
       run: |
-        drmu nexusmods upload $ModId TestMod.zip --file-name "Test Mod $ModVersion" --version $ModVersion --category Main --game stardewvalley
+        drmu nexusmods upload $ModId TestMod.zip -f "Test Mod $ModVersion" -v $ModVersion -t Main -g stardewvalley
         
