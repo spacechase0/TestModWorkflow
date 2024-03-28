@@ -17,7 +17,8 @@ jobs:
     - name: Setup game and SMAPI
       uses: actions/checkout@v4
       with:
-        name: StardewModders/mod-reference-assemblies
+        repository: StardewModders/mod-reference-assemblies
+        fetch-tags: true
         ref: refs/tags/SDV1.6.3-SMAPI4.0.2
         path: GamePath
     - name: Set game path
