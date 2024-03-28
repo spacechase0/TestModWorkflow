@@ -51,7 +51,7 @@ jobs:
         dotnet tool install -g Digitalroot.ModUploader
     - name: Check keys
       run: |
-        nrmu nexusmods check
+        drmu nexusmods check
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
@@ -63,5 +63,5 @@ jobs:
         echo "ModId=$(jq '.UpdateKeys.[] | select(startswith(\"Nexus:\"))' < mod/TestMod/manifest.json | grep -o '[0-9]*')" >> $GITHUB_ENV
     - name: Upload mod
       run: |
-        nrmu nexusmods upload $ModId TestMod.zip --file-name "Test Mod $ModVersion" --version $ModVersion --category Main --game stardewvalley
+        drmu nexusmods upload $ModId TestMod.zip --file-name "Test Mod $ModVersion" --version $ModVersion --category Main --game stardewvalley
         
