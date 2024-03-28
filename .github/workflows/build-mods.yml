@@ -62,7 +62,7 @@ jobs:
     - name: Get mod info
       run: |
         unzip TestMod.zip -d mod
-        echo "ModVersion=$(jq '.Version')" >> $GITHUB_ENV
+        echo "ModVersion=$(jq '.Version' < mod/TestMod/manifest.json)" >> $GITHUB_ENV
         echo "ModId=$(jq '.UpdateKeys[] | select(startswith(\\"Nexus:\\"))' < mod/TestMod/manifest.json | grep -o '[0-9]*')" >> $GITHUB_ENV
     - name: Upload mod
       env:
