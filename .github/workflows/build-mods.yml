@@ -29,3 +29,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Fetch version
+      run: |
+        echo "TestMod_version=$(cat $GITHUB_WORKSPACE/TestMod/bin/Release/version.txt)" >> $GITHUB_ENV
+    - name: Upload Artifact
+      uses: actions/uploard-artifact@v4
+      with:
+        name: TestMod ${{ env.TestMod_version }}
+        path: $GITHUB_WORKSPACE/TestMod/bin/Release/TestMod.zip
