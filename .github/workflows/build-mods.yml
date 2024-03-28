@@ -23,8 +23,8 @@ jobs:
         path: GamePath
     - name: Set game path
       run: |
-        echo "GamePath={{ GITHUB_WORKSPACE }}/GamePath" >> "$GITHUB_ENV"
-        echo "<Project><PropertyGroup><GamePath>{{ GITHUB_WORKSPACE }}/GamePath</GamePath></PropertyGroup></Project>" > "$HOME/stardewvalley.targets"
+        echo "GamePath=$GITHUB_WORKSPACE/GamePath" >> "$GITHUB_ENV"
+        echo "<Project><PropertyGroup><GamePath>$GITHUB_WORKSPACE/GamePath</GamePath></PropertyGroup></Project>" > "$HOME/stardewvalley.targets"
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
