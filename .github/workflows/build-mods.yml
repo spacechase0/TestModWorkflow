@@ -35,5 +35,32 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: TestMod ${{ env.TestMod_version }}
+        name: TestMod
         path: TestMod/bin/Release/TestMod.zip
+
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+    - name: Install and run uploader
+      run: |
+        dotnet tool install Digitalroot.ModUploader
+    - name: Check keys
+      run: |
+        nrmu nexusmods check
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: TestMod
+    - name: Get mod info
+      run: |
+        unzip TestMod.zip -d mod
+        echo "ModVersion=$(jq '.Version')" >> $GITHUB_ENV
+        echo "ModId=$(jq '.UpdateKeys.[] | select(startswith(\"Nexus:\"))' < mod/TestMod/manifest.json | grep -o '[0-9]*')" >> $GITHUB_ENV
+    - name: Upload mod
+      run: |
+        nrmu nexusmods upload $ModId TestMod.zip --file-name "Test Mod $ModVersion" --version $ModVersion --category Main --game stardewvalley
+        
