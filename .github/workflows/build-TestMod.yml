@@ -80,7 +80,7 @@ jobs:
         name: ${{env.MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
-        unzip ${{needs.build.outputs.zip_name}} -d mod
+        unzip "${{needs.build.outputs.zip_name}}" -d mod
         echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "ModSemiUniqueId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UniqueID[.index(\".\") + 1]' >> $GITHUB_ENV
     - name: Create tag
@@ -121,7 +121,7 @@ jobs:
         name: ${{env.MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
-        unzip ${{needs.build.outputs.zip_name}} -d mod
+        unzip "${{needs.build.outputs.zip_name}}" -d mod
         echo "ModName=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Name')" >> $GITHUB_ENV
         echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "ModNexusId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -o '[0-9]*')" >> $GITHUB_ENV
@@ -130,5 +130,5 @@ jobs:
         NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
         NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
       run: |
-        drmu nexusmods upload $ModNexusId ${{needs.build.outputs.zip_name}} -f "$ModName $ModVersion" -v $ModVersion -t Main -d "${{ inputs.upload_file_description }}" -g stardewvalley -dfa
+        drmu nexusmods upload $ModNexusId "${{needs.build.outputs.zip_name}}" -f "$ModName $ModVersion" -v $ModVersion -t Main -d "${{ inputs.upload_file_description }}" -g stardewvalley -dfa
         
