@@ -82,7 +82,7 @@ jobs:
       run: |
         unzip "${{needs.build.outputs.zip_name}}" -d mod
         echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
-        echo "ModSemiUniqueId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UniqueID[.index(\".\") + 1]' >> $GITHUB_ENV
+        echo "ModSemiUniqueId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UniqueID[.index(\\\".\\\") + 1]' >> $GITHUB_ENV
     - name: Create tag
       uses: actions/github-script@v5
       with:
