@@ -107,7 +107,7 @@ jobs:
         NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
         NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
       run: |
-        drmu nexusmods check
+        drmu nx check
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
@@ -115,7 +115,7 @@ jobs:
     - name: Get mod info
       run: |
         unzip TestMod.zip -d mod
-        echo "ModVersion=$(cat mod/TestMod/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
+        echo "ModVersion=$(cat mod/TestMod/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "ModId=$(cat mod/TestMod/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -o '[0-9]*')" >> $GITHUB_ENV
     - name: Upload mod
       env:
