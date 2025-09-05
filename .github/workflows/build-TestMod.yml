@@ -29,6 +29,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    outputs:
+      zip_name: ${{env.MOD_PROJECT_FILE}} ${{env.ModVersion}}.zip
+
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -57,6 +60,7 @@ jobs:
       run: |
         echo "ModVersion=$(cat $MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
     - name: Upload Artifact
+      id: upload_artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{env.MOD_PROJECT_FILE}}
@@ -76,7 +80,7 @@ jobs:
         name: ${{env.MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
-        unzip $MOD_PROJECT_FILE.zip -d mod
+        unzip ${{needs.build.outputs.zip_name}} -d mod
         echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "ModSemiUniqueId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UniqueID[.index(\".\") + 1]' >> $GITHUB_ENV
     - name: Create tag
@@ -117,7 +121,7 @@ jobs:
         name: ${{env.MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
-        unzip $MOD_PROJECT_FILE.zip -d mod
+        unzip ${{needs.build.outputs.zip_name}} -d mod
         echo "ModName=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Name')" >> $GITHUB_ENV
         echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "ModNexusId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -o '[0-9]*')" >> $GITHUB_ENV
@@ -126,5 +130,5 @@ jobs:
         NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
         NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
       run: |
-        drmu nexusmods upload $ModNexusId $MOD_PROJECT_FILE.zip -f "$ModName $ModVersion" -v $ModVersion -t Main -d "${{ inputs.upload_file_description }}" -g stardewvalley -dfa
+        drmu nexusmods upload $ModNexusId ${{needs.build.outputs.zip_name}} -f "$ModName $ModVersion" -v $ModVersion -t Main -d "${{ inputs.upload_file_description }}" -g stardewvalley -dfa
         
