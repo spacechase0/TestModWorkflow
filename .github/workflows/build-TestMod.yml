@@ -55,7 +55,7 @@ jobs:
       run: dotnet build --no-restore --configuration Release $MOD_PROJECT_FILE/$MOD_PROJECT_FOLDER.csproj
     - name: Get mod info
       run: |
-        echo "ModVersion=$(cat $MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
+        echo "ModVersion=$(cat $MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -77,7 +77,7 @@ jobs:
     - name: Get mod info
       run: |
         unzip $MOD_PROJECT_FILE.zip -d mod
-        echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
+        echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "ModSemiUniqueId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UniqueID[.index(\".\") + 1]' >> $GITHUB_ENV
     - name: Create tag
       uses: actions/github-script@v5
