@@ -59,8 +59,8 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{MOD_PROJECT_FILE}}
-        path: ${{MOD_PROJECT_FOLDER}}/bin/Release/${{MOD_PROJECT_FILE}} ${{ModVersion}}.zip
+        name: ${{env.MOD_PROJECT_FILE}}
+        path: ${{env.MOD_PROJECT_FOLDER}}/bin/Release/${{env.MOD_PROJECT_FILE}} ${{env.MODVersion}}.zip
 
   create_tag:
     runs-on: ubuntu-latest
@@ -73,7 +73,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{MOD_PROJECT_FILE}}
+        name: ${{env.MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
         unzip $MOD_PROJECT_FILE.zip -d mod
@@ -114,7 +114,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{MOD_PROJECT_FILE}}
+        name: ${{env.MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
         unzip $MOD_PROJECT_FILE.zip -d mod
