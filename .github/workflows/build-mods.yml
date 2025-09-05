@@ -1,5 +1,9 @@
 name: Build Mod
 
+env:
+  MOD_PROJECT_FOLDER: TestMod
+  MOD_PROJECT_FILE: TestMod # no file extension is intentional
+
 on:
   workflow_dispatch:
     inputs:
@@ -20,7 +24,6 @@ on:
         type: string
         required: false
         default: ""
-
 
 jobs:
   build:
@@ -47,17 +50,17 @@ jobs:
         echo "GamePath=$GITHUB_WORKSPACE/GamePath" >> "$GITHUB_ENV"
         echo "<Project><PropertyGroup><GamePath>$GITHUB_WORKSPACE/GamePath</GamePath></PropertyGroup></Project>" > "$HOME/stardewvalley.targets"
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore $MOD_PROJECT_FILE/MOD_PROJECT_FOLDER.csproj
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration Release $MOD_PROJECT_FILE/MOD_PROJECT_FOLDER.csproj
     - name: Get mod info
       run: |
-        echo "ModVersion=$(cat TestMod/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
+        echo "ModVersion=$(cat $MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: TestMod
-        path: TestMod/bin/Release/TestMod ${{ModVersion}}.zip
+        name: ${{MOD_PROJECT_FILE}}
+        path: ${{MOD_PROJECT_FOLDER}}/bin/Release/${{MOD_PROJECT_FILE}} ${{ModVersion}}.zip
 
   create_tag:
     runs-on: ubuntu-latest
@@ -70,12 +73,12 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
-        name: TestMod
+        name: ${{MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
-        unzip TestMod.zip -d mod
-        echo "ModVersion=$(cat mod/TestMod/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
-        echo "ModSemiUniqueId=$(cat mod/TestMod/manifest.json | strip-json-comments | jq --raw-output '.UniqueID[.index(\".\") + 1]' >> $GITHUB_ENV
+        unzip $MOD_PROJECT_FILE.zip -d mod
+        echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
+        echo "ModSemiUniqueId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UniqueID[.index(\".\") + 1]' >> $GITHUB_ENV
     - name: Create tag
       uses: actions/github-script@v5
       with: |
@@ -111,16 +114,17 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
-        name: TestMod
+        name: ${{MOD_PROJECT_FILE}}
     - name: Get mod info
       run: |
-        unzip TestMod.zip -d mod
-        echo "ModVersion=$(cat mod/TestMod/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
-        echo "ModId=$(cat mod/TestMod/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -o '[0-9]*')" >> $GITHUB_ENV
+        unzip $MOD_PROJECT_FILE.zip -d mod
+        echo "ModName=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Name')" >> $GITHUB_ENV
+        echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
+        echo "ModNexusId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -o '[0-9]*')" >> $GITHUB_ENV
     - name: Upload mod
       env:
         NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
         NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
       run: |
-        drmu nexusmods upload $ModId TestMod.zip -f "Test Mod $ModVersion" -v $ModVersion -t Main -d "${{ inputs.upload_file_description }}" -g stardewvalley -dfa
+        drmu nexusmods upload $ModNexusId $MOD_PROJECT_FILE.zip -f "$ModName $ModVersion" -v $ModVersion -t Main -d "${{ inputs.upload_file_description }}" -g stardewvalley -dfa
         
