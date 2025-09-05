@@ -1,4 +1,4 @@
 # TestModWorkflow
-There's stuff in the github workflow as well as TestMod.csproj
+Copy the workflow script into your repo, then edit the values of MOD_PROJECT_FOLDER and MOD_PROJECT_FILE appropriately.
 
-At the moment you'll need to customize build-mods.yml with your mod folder name
+Also, make sure to set NEXUSMOD_API_KEY and NEXUSMOD_SESSION_COOKIE as secrets in your repository. You can see how to get the cookie value in the FAQ of this repository: https://github.com/Digitalroot-Valheim/Digitalroot.ModUploader

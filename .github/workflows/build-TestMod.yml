@@ -112,7 +112,7 @@ jobs:
     - name: Check keys
       env:
         NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
-        NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
+        NEXUSMOD_SESSION_COOKIE: ${{ secrets.NEXUSMOD_SESSION_COOKIE }}
       run: |
         drmu nx check
     - name: Download artifact
@@ -128,7 +128,7 @@ jobs:
     - name: Upload mod
       env:
         NEXUSMOD_API_KEY: ${{ secrets.NEXUSMOD_API_KEY }}
-        NEXUSMOD_COOKIE_SID_DEVELOP: ${{ secrets.NEXUSMOD_COOKIE_SID_DEVELOP }}
+        NEXUSMOD_SESSION_COOKIE: ${{ secrets.NEXUSMOD_SESSION_COOKIE }}
       run: |
         drmu nexusmods upload $ModNexusId "${{needs.build.outputs.zip_name}}" -f "$ModName $ModVersion" -v $ModVersion -t Main -d "${{ inputs.upload_file_description }}" -g stardewvalley -dfa
         
