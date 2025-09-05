@@ -90,7 +90,7 @@ jobs:
         script: |
           github.rest.git.createRef({
             owner: context.repo.owner,
-            repo: conmtext.repo.repo,
+            repo: context.repo.repo,
             ref: 'refs/tags/' + process.env.ModSemiUniqueId + "-" + process.env.ModVersion,
             sha: context.sha
           });
