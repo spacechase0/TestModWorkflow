@@ -50,9 +50,9 @@ jobs:
         echo "GamePath=$GITHUB_WORKSPACE/GamePath" >> "$GITHUB_ENV"
         echo "<Project><PropertyGroup><GamePath>$GITHUB_WORKSPACE/GamePath</GamePath></PropertyGroup></Project>" > "$HOME/stardewvalley.targets"
     - name: Restore dependencies
-      run: dotnet restore $MOD_PROJECT_FILE/MOD_PROJECT_FOLDER.csproj
+      run: dotnet restore $MOD_PROJECT_FILE/$MOD_PROJECT_FOLDER.csproj
     - name: Build
-      run: dotnet build --no-restore --configuration Release $MOD_PROJECT_FILE/MOD_PROJECT_FOLDER.csproj
+      run: dotnet build --no-restore --configuration Release $MOD_PROJECT_FILE/$MOD_PROJECT_FOLDER.csproj
     - name: Get mod info
       run: |
         echo "ModVersion=$(cat $MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq '.Version')" >> $GITHUB_ENV
