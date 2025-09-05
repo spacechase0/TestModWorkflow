@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{env.MOD_PROJECT_FILE}}
-        path: ${{env.MOD_PROJECT_FOLDER}}/bin/Release/${{env.MOD_PROJECT_FILE}} ${{env.MODVersion}}.zip
+        path: ${{env.MOD_PROJECT_FOLDER}}/bin/Release/${{env.MOD_PROJECT_FILE}} ${{env.ModVersion}}.zip
 
   create_tag:
     runs-on: ubuntu-latest
