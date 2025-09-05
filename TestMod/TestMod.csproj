@@ -16,9 +16,4 @@
 		<PackageReference Include="Leclair.Stardew.ModManifestBuilder" Version="2.1.0" />
 		<PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1" />
 	</ItemGroup>
-
-	<Target Name="PrepareForGithubWorkflow" AfterTargets="Build" Condition="$(Configuration)=='Release'">
-		<Move SourceFiles="$(OutputPath)\$(ProjectName) $(Version).zip" DestinationFiles="$(OutputPath)\$(ProjectName).zip" />
-		<WriteLinesToFile File="$(OutputPath)\version.txt" Lines="$(Version)" Overwrite="true" />
-	</Target>
 </Project>
