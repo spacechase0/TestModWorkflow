@@ -115,9 +115,9 @@ jobs:
         echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "$(cat mod/$MOD_PROJECT_FOLDER/manifest.json)"
         echo "$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments)"
-        echo "$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith(\"Nexus:\"))')"
-        echo "$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith(\"Nexus:\"))' | grep -o '[0-9]+')"
-        echo "ModNexusId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith(\"Nexus:\"))' | grep -o '[0-9]+')" >> $GITHUB_ENV
+        echo "$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))')"
+        echo "$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -o '[0-9]+')"
+        echo "ModNexusId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -o '[0-9]+')" >> $GITHUB_ENV
     - name: Upload to Nexus
       uses: Nexus-Mods/upload-action@main
       with:
