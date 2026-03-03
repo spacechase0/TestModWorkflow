@@ -115,7 +115,7 @@ jobs:
         echo "ModVersion=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.Version')" >> $GITHUB_ENV
         echo "ModNexusId=$(cat mod/$MOD_PROJECT_FOLDER/manifest.json | strip-json-comments | jq --raw-output '.UpdateKeys[] | select(startswith("Nexus:"))' | grep -P -o '[0-9]+')" >> $GITHUB_ENV
     - name: Upload to Nexus
-      uses: Nexus-Mods/upload-action@main
+      uses: spacechase0/upload-action@file-description-support
       with:
         api_key: ${{ secrets.NEXUSMOD_API_KEY }}
         file_id: 86336
@@ -123,4 +123,5 @@ jobs:
         filename: ${{needs.build.outputs.zip_name}}
         version: ${{ env.ModVersion }}
         display_name: ${{ env.ModName }} ${{ env.ModVersion }}
+        description: ${{ github.event.inputs.upload_file_description }}
         file_category: main
