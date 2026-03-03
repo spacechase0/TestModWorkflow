@@ -118,7 +118,7 @@ jobs:
       uses: Nexus-Mods/upload-action@main
       with:
         api_key: ${{ secrets.NEXUSMOD_API_KEY }}
-        file_id: ${{ env.ModNexusId }}
+        file_id: 86336
         game_domain_name: stardewvalley
         filename: ${{needs.build.outputs.zip_name}}
         version: ${{ env.ModVersion }}
